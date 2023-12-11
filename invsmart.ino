@@ -2,7 +2,7 @@
 #include <LiquidCrystal_I2C.h>
 
 LiquidCrystal_I2C lcd1(0x27, 16, 2);  // LCD 1, Dirección I2C 0x27, 16 columnas y 2 filas
-LiquidCrystal_I2C lcd2(0x28, 16, 2);  // LCD 2, Dirección I2C 0x28, 16 columnas y 2 filas
+LiquidCrystal_I2C lcd2(0x25, 16, 2);  // LCD 2, Dirección I2C 0x28, 16 columnas y 2 filas
 
 const int panelSolarPin = 34;   // Pin analógico para el sensor de paneles solares
 const int bateriaPin = 35;      // Pin analógico para el sensor de baterías
@@ -18,12 +18,20 @@ const int activacionEDEPin = 14; // Pin para el relé de activación de EDE
 const float voltaje = 120.0;  // Voltaje de la red eléctrica en V
 
 void setup() {
-  lcd1.begin(16, 2);  // Inicializar LCD 1
+   
+  Wire.begin();
+    
+  lcd1.begin(16, 2);  // Inicializar LCD 1  
+// lcd1.init();
+
   lcd2.begin(16, 2);  // Inicializar LCD 2
 
-  lcd1.print("Solar: 0W Batería: 0W");
+lcd1.backlight();  
+lcd2.backlight();
+
+  lcd1.print("PS:0W   Bat:0W");
   lcd1.setCursor(0, 1);
-  lcd1.print("EDE: 0W");
+  lcd1.print("EDE:0W");
 
   lcd2.print("C1: 0W C2: 0W C3: 0W");
   lcd2.setCursor(0, 1);
@@ -57,24 +65,24 @@ void loop() {
   float potenciaCarga5 = voltaje * corrienteCarga5;
 
   // Mostrar valores en LCD 1
-  lcd1.setCursor(7, 0);
+  lcd1.setCursor(4, 0);
   lcd1.print(String(potenciaSolar, 1) + "W");
-  lcd1.setCursor(17, 0);
+  lcd1.setCursor(12, 0);
   lcd1.print(String(potenciaBateria, 1) + "W");
   lcd1.setCursor(0, 1);
-  lcd1.print("EDE: " + String(potenciaEDE, 1) + "W");
+  lcd1.print("EDE:" + String(potenciaEDE, 1) + "W");
 
   // Mostrar valores en LCD 2
   lcd2.setCursor(0, 0);
-  lcd2.print("C1: " + String(potenciaCarga1, 1) + "W");
+  lcd2.print("C1:" + String(potenciaCarga1, 1) + "W");
   lcd2.setCursor(6, 0);
-  lcd2.print("C2: " + String(potenciaCarga2, 1) + "W");
+  lcd2.print("C2:" + String(potenciaCarga2, 1) + "W");
   lcd2.setCursor(12, 0);
-  lcd2.print("C3: " + String(potenciaCarga3, 1) + "W");
+  lcd2.print("C3:" + String(potenciaCarga3, 1) + "W");
   lcd2.setCursor(0, 1);
-  lcd2.print("C4: " + String(potenciaCarga4, 1) + "W");
+  lcd2.print("C4:" + String(potenciaCarga4, 1) + "W");
   lcd2.setCursor(6, 1);
-  lcd2.print("C5: " + String(potenciaCarga5, 1) + "W");
+  lcd2.print("C5:" + String(potenciaCarga5, 1) + "W");
 
 float sumaPotenciasCargas = (potenciaCarga1 + potenciaCarga2 + potenciaCarga3 + potenciaCarga4 + potenciaCarga5);
 
